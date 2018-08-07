@@ -3,6 +3,25 @@ angular.module('ethExplorer')
 
        var web3 = $rootScope.web3;
 	
+function hex2a(hex) {
+    var str = '';
+    var started = false;
+    for (var i = 2; i < hex.length; i += 2) {
+	var byteStr = String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+	if (byteStr == '{') {
+		started = true;
+	}
+	if (byteStr == '}') {
+        	str += byteStr;
+		started = false;
+	}
+	if (started) {
+        	str += byteStr;
+	}
+    }
+
+    return str;
+}
         $scope.init=function()
         {
             $scope.txId=$routeParams.transactionId;
@@ -33,6 +52,8 @@ angular.module('ethExplorer')
                     $scope.gasPrice = result.gasPrice.c[0] + " WEI";
                     $scope.hash = result.hash;
                     $scope.input = result.input; // that's a string
+		    $scope.displayText = hex2a(result.input);
+		    // $scope.displayText = JSON.stringify(JSON.parse(hex2a(result.input), undefined, 2));
                     $scope.nonce = result.nonce;
                     $scope.to = result.to;
                     $scope.transactionIndex = result.transactionIndex;
